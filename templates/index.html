@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Perbaikan Kualitas Citra{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="hero-section">
+        <h1 class="main-title">Perbaikan Kualitas Citra</h1>
+        
+        <div class="upload-card">
+            <img src="{{ url_for('static', filename='images/image-icon.svg') }}" alt="Image Icon" class="upload-icon">
+            
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <div class="upload-zone" id="drop-zone">
+                    <input type="file" name="file" accept="image/*" required id="file-input" style="display: none;">
+                    <img src="{{ url_for('static', filename='images/upload-icon.svg') }}" alt="Upload" style="width: 48px; margin-bottom: 1rem;">
+                    <div class="drag-text">
+                        <h3>Seret dan lepas gambar di sini</h3>
+                        <p>atau</p>
+                    </div>
+                    <button type="button" class="btn-upload" onclick="document.getElementById('file-input').click()">
+                        Unggah gambar Anda
+                    </button>
+                </div>
+            </form>
+
+            {% if original_filename %}
+            <div class="result-images">
+                <div class="img-container">
+                    <h3>Gambar Asli</h3>
+                    <img src="{{ url_for('static', filename='uploads/' + original_filename) }}" 
+                         alt="Original Image" 
+                         class="img-fluid">
+                </div>
+                {% if processed_filename %}
+                <div class="img-container">
+                    <h3>Hasil Perbaikan</h3>
+                    <img src="{{ url_for('static', filename='uploads/' + processed_filename) }}" 
+                         alt="Processed Image" 
+                         class="img-fluid">
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="features-section">
+        <h2>Fitur Perbaikan Citra</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="{{ url_for('static', filename='images/contrast-icon.svg') }}" alt="Contrast">
+                </div>
+                <h3 class="feature-title">Perbaikan Kontras</h3>
+                <p class="feature-description">Tingkatkan kontras gambar secara otomatis untuk hasil yang lebih jelas dan tajam.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="{{ url_for('static', filename='images/noise-icon.svg') }}" alt="Noise">
+                </div>
+                <h3 class="feature-title">Reduksi Noise</h3>
+                <p class="feature-description">Hilangkan noise dan gangguan pada gambar untuk hasil yang lebih bersih.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="{{ url_for('static', filename='images/sharp-icon.svg') }}" alt="Sharpness">
+                </div>
+                <h3 class="feature-title">Peningkatan Ketajaman</h3>
+                <p class="feature-description">Tingkatkan ketajaman detail gambar untuk hasil yang lebih profesional.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('upload-zone-active');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('upload-zone-active');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('upload-zone-active');
+    fileInput.files = e.dataTransfer.files;
+    if (fileInput.files.length > 0) {
+        fileInput.form.submit();
+    }
+});
+</script>
+{% endblock %}
